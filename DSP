@@ -1,0 +1,253 @@
+/////////////////////////////////////////////////////////////////////////////////////
+Practical:1
+
+Aim: Generation of Discrete Signals
+
+CODE: 
+
+1)unit impulse signal
+
+y1=zeros(1,21)
+y1(11,1)=1
+y1
+subplot(3,2,1)
+plot2d3(y1)
+
+2)unit step signal
+
+y1=zeros(1,21)
+y1(11,1)=1
+y1
+subplot(3,2,1)
+plot2d3(y1)
+
+3)unit ramp signal
+y=0:10
+subplot(3,2,1)
+plot2d3(y)
+
+4)exponentially increasing signal
+t=-2:0.1:2
+x=exp(t)
+subplot(3,2,2)
+plot2d3(x)
+
+5)exponentially decreasing
+t=-2:0.1:2
+x=exp(-t)
+subplot(3,2,2)
+plot2d3(x)
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+Practical:2
+
+Aim: Linear Convolution of two sequences
+
+CODE:
+
+x=input("enter the value for x(n)")
+h=input("enter the value for h(n)")
+
+n1=length(x)
+n2=length(h)
+
+N=n1+n2-1
+x=[x,zeros(1,N-n1)]
+h=[h,zeros(1,N-n2)]
+y=zeros(1,N)
+for n=1:N
+    for k=1:n
+        y(n)=y(n)+x(k)*h(n-k+1)
+end
+end
+disp(y)
+
+ny=0:N-1
+subplot(3,1,1)
+plot2d3(ny,x)
+subplot(3,1,2)
+plot2d3(ny,h)
+subplot(3,1,3)
+plot2d3(ny,y)
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+Practical:3
+
+Aim: Circular Convolution of two sequences
+
+CODE:
+
+generation of circular convolution
+xn=[1,2,3,4]
+xn=mtlb_fliplr(xn)
+hn=[2,1,2,1]
+//first convolution
+x1=[xn($)xn(1:$-1)]
+h1=hn
+ycc(1)=sum(x1.*h1)
+
+//second convolution//
+x2=[x1($)x1(1:$-1)]
+h2=hn
+ycc(2)=sum(x2.*h2)
+
+//third convolution
+
+x3=[x2($)x2(1:$-1)]
+h3=hn
+ycc(3)=sum(x3.*h3)
+
+//fourth convolution
+
+x4=[x3($)x3(1:$-1)]
+h4=hn
+ycc(4)=sum(x4.*h4)
+ disp(ycc)
+
+for looping:
+
+xn=[1,2,3,4]
+hn=[2,1,2,1]
+x1=xn
+h1=hn
+for i=1:length(xn)
+    x1=[x1($)x1(1:$-1)]
+    h1=hn
+    ycc(1)=sum(x1.*h1)
+    disp(ycc(1))
+end
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+Practical:4
+
+Aim:Performing Circular Convolution Using DFT, IDFT method
+
+CODE:
+
+x1=input("enter the data")
+x2=input("enter the data")
+
+len1=length(x1)
+len2=length(x2)
+
+l1=[x1,zeros(),4-len1]
+l2=[x2,zeros(),4-len2]
+
+disp(l1)
+disp(l2)
+
+dft1=fft(l1,-1)
+dft2=fft(l2,-1)
+
+disp(dft1)
+disp(dft2)
+
+dft3=dft1.*dft2
+
+idft=ifft(dft3)
+disp(idft)
+
+
+//////////////////////////////////////////////////////////////////////////////////
+Practical:5
+
+Aim: Performing Linear Convolution using Circular Convolution
+
+CODE:
+
+xn=[1,2,3,4]
+hn=[2,1,2,1]
+x1=xn
+h1=hn
+for i=1:length(xn)
+    x1=[x1($)x1(1:$-1)]
+    h1=hn
+    ycc(1)=sum(x1.*h1)
+    disp(ycc(1))
+end
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+Practical:6
+
+Aim: Performing FFT and IFFT of a discrete sequence
+
+CODE:
+
+x=[1,1,0,0,1,1,0,0];
+n=[0,4,2,6,1,5,3,7]+1;
+
+for i=1:8;
+    S=n(i);
+    xn(i)=x(S);
+end
+O=xn;
+N=length(x);
+s=log2(N);
+cnt=1;
+//stage1
+for n=1:2:N-1
+    W8_0=exp(-1*%i*2*%pi*0/N);
+    f(cnt)=O(n)+O(n+1)*W8_0;
+    f(cnt+1)=O(n)-O(n+1)*W8_0;
+    cnt=cnt+2;
+end
+disp(f)
+//stage2
+cnt=1
+for n=1:4:N-1
+    W8_0=exp(-1*%i*2*%pi*0/N);
+    W8_2=exp(-1*%i*2*%pi*2/N);
+    G(cnt)=f(n)+f(n+2)*W8_0;
+    G(cnt+2)=f(n)-f(n+2)*W8_0;
+    G(cnt+1)=f(n+1)+f(n+3)*W8_2;
+    G(cnt+3)=f(n+1)-f(n+3)*W8_2;
+    cnt=cnt+4;
+end
+disp(G);
+//stage3
+cnt=1;
+for n=1:N/2
+    W8=exp(-1*%i*2*%pi/N);
+    X(cnt)=G(n)+G(n+4)*W8^(n-1);
+    X(cnt+4)=G(n)-G(n+4)*W8^(n-1);
+    cnt=cnt+1;
+end
+disp(X)    
+    
+    
+    
+///////////////////////////////////////////////////////////////////////////////////
+Practical:7
+
+Aim: Time and Frequency Response of LTI systems
+
+CODE:
+
+tmin=0
+tmax=1
+t=linspace(tmin,tmax,256)
+[fir_time,fir_freq,fr]=wfir("lp",133,[.20],"re",[00])
+
+subplot(2,2,1)
+title('h(n)')
+plot(fir_time)
+
+subplot(2,2,2)
+title('h(w)')
+plot(fir_freq)
+
+x=sin(2*%pi*t*64)+sin(2*%pi*t*128)+sin(2*%pi*t*256)
+subplot(2,2,3)
+y=fft(x)
+
+title('Signal IFFT')
+plot(abs(y))
+
+subplot(2,2,4)
+yf=abs(y).*fir_freq
+title('FIR filter signal')
+plot(abs(yf))
